@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/logo_smpn1pacet.png" type="image/png">
+    <title>SMPN 1 PACET - Pengumuman Kelulusan</title>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 20px; border-radius: 20px; }
+            h2 { font-size: 18px; }
+        }
+
+        .logo { width: 120px; margin-bottom: 20px; }
+        .foto-kepsek {
+            width: 150px; height: 150px; object-fit: cover; border-radius: 50%;
+            margin: 10px 0; border: 4px solid var(--secondary);
+        }
+
+        h2 { color: var(--primary); margin: 0; font-size: 22px; }
+        .school-info { color: #555; font-size: 14px; margin-bottom: 5px; }
+        .tahun-ajaran {
+            background: #eef2ff; color: var(--primary); padding: 5px 15px;
+            border-radius: 20px; font-weight: bold; margin: 15px auto;
+            display: inline-block; font-size: 13px;
+        }
+
+        .content-section { display: none; animation: slideUp 0.5s ease-out; }
+        .content-section.active { display: block; }
+
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white; padding: 15px; border: none; border-radius: 50px;
+            cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4); }
+
+        input {
+            width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #eee;
+            border-radius: 12px; box-sizing: border-box; text-align: center; font-size: 16px;
+        }
+
+        #hasil { margin-top: 20px; padding: 25px; border-radius: 15px; display: none; }
+        .sambutan-teks { font-size: 14px; line-height: 1.6; text-align: justify; color: #444; }
+
+
+        .nama-siswa {
+            font-weight: bold;
+            display: block;
+            word-wrap: break-word; /* Memaksa teks panjang turun ke bawah */
+            overflow-wrap: break-word;
+            padding: 5px 0;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <img src="/logo_smpn1pacet.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+    <h2>SMPN 1 PACET</h2>
+    <p class="school-info"><b>MOJOKERTO JAWA TIMUR</b></p>
+
+    <div class="tahun-ajaran">Tahun Pelajaran 2025/2026</div>
+
+    <div id="sambutan" class="content-section active">
+        <div style="background: #f8f9ff; padding: 20px; border-radius: 15px; text-align: center;">
+            <img src="/Kepala_Sekolah.png" alt="Kepala Sekolah" class="foto-kepsek" onerror="this.style.display='none'">
+            <div class="sambutan-teks">
+                <p><strong>Assalamu'alaikum warahmatullahi wabarakatuh.<br>Salam sejahtera.</strong></p>
+                <p>Anak-anakku kelas IX Tahun Pelajaran 2025/2026,</p>
+                <p>Sebelum membuka hasil kelulusanmu, tenangkan hati dulu. Apapun yang tertulis nanti, itu adalah hasil terbaik dari ikhtiarmu selama tiga tahun di SMPN 1 Pacet.</p>
+                <p>Jika lulus, bersyukurlah dan jangan sombong. Jika belum, jangan patah semangat. Nilai tidak menentukan masa depanmu, sikapmu yang menentukan.</p>
+                <p>Peluk orang tuamu, doakan gurumu. Bismillah, klik dengan hati yang siap.</p>
+                <p>Wassalamu'alaikum.<br><br>
+                    <strong>Edy Suyitno,S.Pd</strong><br>
+                    Kepala SMPN 1 Pacet</p>
+            </div>
+        </div>
+        <button class="btn" onclick="tampilkanCek()">Cek Kelulusan Sekarang</button>
+    </div>
+
+    <div id="cek" class="content-section">
+        <input type="text" id="nisn" placeholder="Masukkan NISN Anda" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <button class="btn" onclick="cekKelulusan()">Periksa Hasil</button>
+        <button class="btn" style="background: #888;" onclick="tampilkanSambutan()">Kembali</button>
+        <div id="hasil"></div>
+    </div>
+</div>
+
+<script>
+    function tampilkanCek() {
+        document.getElementById('sambutan').classList.remove('active');
+        document.getElementById('cek').classList.add('active');
+    }
+
+    function tampilkanSambutan() {
+        document.getElementById('cek').classList.remove('active');
+        document.getElementById('sambutan').classList.add('active');
+    }
+
+    const dataSiswa = [{nisn:"0117710858",nama:"ACHMAD ZIDHAN PUTRA",kelas:"IX A",status:"LULUS"},{nisn:"0115162897",nama:"AGCHELINE GRACENATA ALBA",kelas:"IX A",status:"LULUS"},{nisn:"0101557106",nama:"AHMAD MAULANA ANAFIAH",kelas:"IX A",status:"LULUS"},{nisn:"0119778070",nama:"ALINSYA MAULINA NAFTALIN",kelas:"IX A",status:"LULUS"},{nisn:"0102675376",nama:"ANINDYA PRINZA DYATMIKA",kelas:"IX A",status:"LULUS"},{nisn:"0113394073",nama:"AULIA DWI PERMATASARI",kelas:"IX A",status:"LULUS"},{nisn:"0104502263",nama:"BINTANG DITYA WARDANA",kelas:"IX A",status:"LULUS"},{nisn:"0101112095",nama:"BRIGMA GENEUNG PRATIDINA SYAHLIEVI",kelas:"IX A",status:"LULUS"},{nisn:"0112945334",nama:"DAFINA AURELLIA ISMAWARDHANI",kelas:"IX A",status:"LULUS"},{nisn:"0114542801",nama:"DIRLY ALI RAVA SABANA PUTRA",kelas:"IX A",status:"LULUS"},{nisn:3106689511,nama:"EKA FITRI AYU ASLUKAH",kelas:"IX A",status:"LULUS"},{nisn:"0116147494",nama:"FERDIAN REVANNO RAMADANI",kelas:"IX A",status:"LULUS"},{nisn:"0116225226",nama:"FIRLY ELONIA QIRANI",kelas:"IX A",status:"LULUS"},{nisn:"0119194088",nama:"HERLIN MAYLOVICA ANGEL SUMAHARA",kelas:"IX A",status:"LULUS"},{nisn:3117232908,nama:"JESSICHA REVANANDA RIZQIA PUTRI",kelas:"IX A",status:"LULUS"},{nisn:"0105134246",nama:"M. FAHRI SYAFI'UR ROHIM",kelas:"IX A",status:"LULUS"},{nisn:"0101183925",nama:"M. HAFID MAULANA ROMADHON",kelas:"IX A",status:"LULUS"},{nisn:"0112154203",nama:"MARSYA VERONICA PUTRI",kelas:"IX A",status:"LULUS"},{nisn:"0106618884",nama:"MOHAMMAD GALUH DAVID SAPUTRA",kelas:"IX A",status:"LULUS"},{nisn:"0108530219",nama:"MUHAMMAD ANTONIO",kelas:"IX A",status:"LULUS"},{nisn:"0116510854",nama:"MUHAMMAD RADIT UBAIDILLAH",kelas:"IX A",status:"LULUS"},{nisn:"0106150742",nama:"NADYA ANGGI PRATIWI",kelas:"IX A",status:"LULUS"},{nisn:"0104994370",nama:"NUR FITRIANI AZIZAH",kelas:"IX A",status:"LULUS"},{nisn:"0111601695",nama:"RAFFA'ABY HIDAYATUL IKROMI",kelas:"IX A",status:"LULUS"},{nisn:"0104320788",nama:"RAKHMAD WONGSO NITI PRIBADI",kelas:"IX A",status:"LULUS"},{nisn:"0107352173",nama:"ROSITA LINDA SARI",kelas:"IX A",status:"LULUS"},{nisn:"0101149551",nama:"SAKTI BIMANTARA DWI HERMAWAN",kelas:"IX A",status:"LULUS"},{nisn:"0105746071",nama:"SITI RAHMAWATI",kelas:"IX A",status:"LULUS"},{nisn:"0101786985",nama:"TASHA RAHMADANI PUTRI DHANIAKSA",kelas:"IX A",status:"LULUS"},{nisn:"0101538253",nama:"VINZA EMRALDY SUBAGIYA",kelas:"IX A",status:"LULUS"},{nisn:"0107077915",nama:"VIVIANA ZAHRA RAMADHANI",kelas:"IX A",status:"LULUS"},{nisn:"0102613657",nama:"ABIMANYU NOUVAL AKHMAD",kelas:"IX B",status:"LULUS"},{nisn:"0106851032",nama:"ACHIFROTUL HELEN CALYSTA PUTRI",kelas:"IX B",status:"LULUS"},{nisn:"0115087468",nama:"AFFAN SATRIA NUGRAHA",kelas:"IX B",status:"LULUS"},{nisn:"0113568718",nama:"AISYAH WAFA SABRINA",kelas:"IX B",status:"LULUS"},{nisn:"0108047531",nama:"ALMER DARAKA FIR RAMZA ABRAR",kelas:"IX B",status:"LULUS"},{nisn:"0108116808",nama:"ANDIVA AYU VERONIKA PUTRI THERESIA",kelas:"IX B",status:"LULUS"},{nisn:"0103589999",nama:"ARINDA SAFA RANI",kelas:"IX B",status:"LULUS"},{nisn:"0118518465",nama:"ARLO FAYYADH RAQILLAH",kelas:"IX B",status:"LULUS"},{nisn:"0103812144",nama:"AYUNI IMAMI OKTAVIANI",kelas:"IX B",status:"LULUS"},{nisn:"0104211313",nama:"CARISA NUR AMIRAH SARI",kelas:"IX B",status:"LULUS"},{nisn:"0115613553",nama:"DEVA PUTRA HERMAWANSYAH",kelas:"IX B",status:"LULUS"},{nisn:"0103374068",nama:"DWI CINDY NUR FITRIANI",kelas:"IX B",status:"LULUS"},{nisn:"0101678782",nama:"FATIMATUS ZAHRA",kelas:"IX B",status:"LULUS"},{nisn:"0111861777",nama:"FERDIANSYAH DWI SAPUTRA",kelas:"IX B",status:"LULUS"},{nisn:"0111707683",nama:"GIANJAR ZAHWA PRATIWI",kelas:"IX B",status:"LULUS"},{nisn:"0103436638",nama:"HISYAM FIROOS PUTRA SADEWO",kelas:"IX B",status:"LULUS"},{nisn:"0118351571",nama:"JEFA VERINA LLANEZA",kelas:"IX B",status:"LULUS"},{nisn:"0117770501",nama:"MOH ADZIM MATURROHMAN",kelas:"IX B",status:"LULUS"},{nisn:"0102401723",nama:"MUHAMAD RIDHO NUR AFLAH",kelas:"IX B",status:"LULUS"},{nisn:"0109915009",nama:"MUHAMMAD DAVID ARIFIANTO",kelas:"IX B",status:"LULUS"},{nisn:"0107117330",nama:"MUHAMMAD RASYA IBRAHIM",kelas:"IX B",status:"LULUS"},{nisn:"0109510402",nama:"MUTIARA AMRU SETYOWATI",kelas:"IX B",status:"LULUS"},{nisn:"0109556895",nama:"NATHASYA ALENA PUTRI",kelas:"IX B",status:"LULUS"},{nisn:"0104685220",nama:"PUTRA MAHRUS ALISIROD",kelas:"IX B",status:"LULUS"},{nisn:"0112358998",nama:"PUTRI ABEL RAHAYU",kelas:"IX B",status:"LULUS"},{nisn:"0106748947",nama:"RENGGA EKA NOVIANTO",kelas:"IX B",status:"LULUS"},{nisn:"0117560272",nama:"RESY JANIAR DWI CAHYANI",kelas:"IX B",status:"LULUS"},{nisn:3106540296,nama:"SHAFA UFAIROH",kelas:"IX B",status:"LULUS"},{nisn:"0105512207",nama:"SYILLA INNAYATUS SYARIFAH YUDIANTO",kelas:"IX B",status:"LULUS"},{nisn:"0112427423",nama:"TYO SANDY APRILLIO",kelas:"IX B",status:"LULUS"},{nisn:"0106397773",nama:"VELOVE SYAFIRA PERMATA WAHYUDI",kelas:"IX B",status:"LULUS"},{nisn:"0101299497",nama:"ADITRA BAGUS PUTRA FAUZAN",kelas:"IX C",status:"LULUS"},{nisn:"0102156814",nama:"AIDA RIZA FITRIANI",kelas:"IX C",status:"LULUS"},{nisn:"0119377997",nama:"ALFANO RIZKY MAULUDIN",kelas:"IX C",status:"LULUS"},{nisn:"0104789041",nama:"AMELIA KHUSUMA PUTRI",kelas:"IX C",status:"LULUS"},{nisn:"0105076279",nama:"ANDRE DWI DESFRIANSYAH",kelas:"IX C",status:"LULUS"},{nisn:"0101176329",nama:"AQILA AZALIA",kelas:"IX C",status:"LULUS"},{nisn:"0105470085",nama:"AURA CINTA SUCI",kelas:"IX C",status:"LULUS"},{nisn:"0116332485",nama:"CAHYA PUTRI ARYANI",kelas:"IX C",status:"LULUS"},{nisn:"0106583511",nama:"DIAN PUTRI LIYANA AGUSTIN",kelas:"IX C",status:"LULUS"},{nisn:"0102982317",nama:"EVA CAHAYA USTIN ROYAN",kelas:"IX C",status:"LULUS"},{nisn:"0112825288",nama:"EVAN YAFIQ FAIREGA",kelas:"IX C",status:"LULUS"},{nisn:"0119432663",nama:"FITRIA FALIHA",kelas:"IX C",status:"LULUS"},{nisn:"0093249411",nama:"HAFIDZ NUR CAHYO",kelas:"IX C",status:"LULUS"},{nisn:"0118352477",nama:"INEQE KUSUMA PUTRI",kelas:"IX C",status:"LULUS"},{nisn:"0112894151",nama:"KEYSHA ADELIA SALMA SABRINA",kelas:"IX C",status:"LULUS"},{nisn:"0119519565",nama:"MAYDA RATNA FERLITA",kelas:"IX C",status:"LULUS"},{nisn:"0105682153",nama:"MIKO RABIL SAFITRA",kelas:"IX C",status:"LULUS"},{nisn:"0113364243",nama:"MOHAMMAD ZIANDRA FARIKH AL KALIFI",kelas:"IX C",status:"LULUS"},{nisn:"0119811335",nama:"MUCHAMMAD ASEGAF BAYHAQI",kelas:"IX C",status:"LULUS"},{nisn:"0108378318",nama:"MUHAMMAD AULIYA' ZIYADATUS SALAM",kelas:"IX C",status:"LULUS"},{nisn:"0117831418",nama:"MUHAMMAD MISFAHRUL KHAFID",kelas:"IX C",status:"LULUS"},{nisn:"0108990652",nama:"NAILA PUTRI",kelas:"IX C",status:"LULUS"},{nisn:"0104870944",nama:"NAJWA ANGGIA MAKHFUFAH",kelas:"IX C",status:"LULUS"},{nisn:"0102714628",nama:"RENALDI PUTRA WAHYU",kelas:"IX C",status:"LULUS"},{nisn:"0102992596",nama:"RENITA RAHMA APRILIA",kelas:"IX C",status:"LULUS"},{nisn:"0117503170",nama:"SA'IDA LEGA MAGDALENA",kelas:"IX C",status:"LULUS"},{nisn:"0101906665",nama:"SUMARGA HAKIM PUTRA",kelas:"IX C",status:"LULUS"},{nisn:"0103976594",nama:"UMI MASLAKHATIN ADINDA AL - ABADIA",kelas:"IX C",status:"LULUS"},{nisn:"0108366697",nama:"WIKE AGUSTINA RAHMADANI",kelas:"IX C",status:"LULUS"},{nisn:"0114876879",nama:"ZILVILA RESVECTHA WAHYU CALYSTA",kelas:"IX C",status:"LULUS"},{nisn:"0108123094",nama:"ACHMAD FADHIL MAULANA PRATAMA",kelas:"IX D",status:"LULUS"},{nisn:"0106354082",nama:"ADELIA PUTRI",kelas:"IX D",status:"LULUS"},{nisn:"0107967407",nama:"AHMAD ADIR DWI SEPTIAN",kelas:"IX D",status:"LULUS"},{nisn:"0117303277",nama:"AIDILEVY AZKA PRAKASIWA",kelas:"IX D",status:"LULUS"},{nisn:"0118910895",nama:"ALEESYA PUTRI SUGIARTO",kelas:"IX D",status:"LULUS"},{nisn:"0118422631",nama:"ALVARO NARYAMA LINTANG GANTARI",kelas:"IX D",status:"LULUS"},{nisn:"0103208369",nama:"ANGGITA DWI CAHYANI",kelas:"IX D",status:"LULUS"},{nisn:"0117540181",nama:"ARSHANDRA MANGGARI",kelas:"IX D",status:"LULUS"},{nisn:"0115267213",nama:"AZKA ZULFA NABILA",kelas:"IX D",status:"LULUS"},{nisn:"0112281649",nama:"CHERYL ALYSA LUDFI AZAHRAH",kelas:"IX D",status:"LULUS"},{nisn:"0108876282",nama:"DIMAS ADITYA SAPUTRA",kelas:"IX D",status:"LULUS"},{nisn:"0108499226",nama:"DZIHNI NAFARISYA AZARINE",kelas:"IX D",status:"LULUS"},{nisn:"0103524238",nama:"FARID DWI ROHMADHANI",kelas:"IX D",status:"LULUS"},{nisn:"0112596501",nama:"FELISYA EXA PRISHIFI",kelas:"IX D",status:"LULUS"},{nisn:"0105213487",nama:"GITA OCTAFIANA SUSANTI",kelas:"IX D",status:"LULUS"},{nisn:"0102376207",nama:"IKSAN RIZKY WIBOWO",kelas:"IX D",status:"LULUS"},{nisn:"0101721763",nama:"JOVITA DWI REVANDA",kelas:"IX D",status:"LULUS"},{nisn:"0106912237",nama:"KHOIRUNNISA MELLAUDY PUTRI",kelas:"IX D",status:"LULUS"},{nisn:"0103273179",nama:"MEYDIHANA INDRIA LESTARI",kelas:"IX D",status:"LULUS"},{nisn:"0104498807",nama:"MUHAMMAD ABIDDAFA PUTRA PRATAMA",kelas:"IX D",status:"LULUS"},{nisn:3107849812,nama:"MUHAMMAD DHAMAR PANULUH",kelas:"IX D",status:"LULUS"},{nisn:"0117265094",nama:"MUHAMMAD WISNU HERMAWAN",kelas:"IX D",status:"LULUS"},{nisn:"0101665372",nama:"NAYLA SANDRICA FIRDAUSY",kelas:"IX D",status:"LULUS"},{nisn:"0105129449",nama:"PUTRI ANINDIYA NUR LATIFAH",kelas:"IX D",status:"LULUS"},{nisn:"0117185168",nama:"RAHMAD AGUNG LOKANANTA",kelas:"IX D",status:"LULUS"},{nisn:"0114718181",nama:"RICKO ANDREAN",kelas:"IX D",status:"LULUS"},{nisn:"0112291127",nama:"RIFDA BADI UZ ZAHRA",kelas:"IX D",status:"LULUS"},{nisn:"0129207162",nama:"TARA ZULVILIA",kelas:"IX D",status:"LULUS"},{nisn:"0116926687",nama:"VINCENT MARVELINO PUTRA FEBRIAN",kelas:"IX D",status:"LULUS"},{nisn:"0112909677",nama:"VIONY CITRA LESTARI",kelas:"IX D",status:"LULUS"},{nisn:"0101088100",nama:"ZYVARA TANIA PUTRI SUPRAPTA",kelas:"IX D",status:"LULUS"},{nisn:"0102340878",nama:"ACHMAD ALFAN MEI RAHMAWANTO",kelas:"IX E",status:"LULUS"},{nisn:"0105988695",nama:"ADELLIA SPALAN ZANIE",kelas:"IX E",status:"LULUS"},{nisn:"0101352176",nama:"AHMAD IMAMUDIN ILHAM",kelas:"IX E",status:"LULUS"},{nisn:"0104954424",nama:"ALIFFIYAH NUR AFIFAH",kelas:"IX E",status:"LULUS"},{nisn:"0105662778",nama:"ALVITO REGA DINOVA",kelas:"IX E",status:"LULUS"},{nisn:"0112696396",nama:"ANINDITA PUTRI PRAMESWARI",kelas:"IX E",status:"LULUS"},{nisn:3104043058,nama:"AULIA DWI ANGGRAINI",kelas:"IX E",status:"LULUS"},{nisn:3107067927,nama:"AZZARIA KEVIN ABBAS",kelas:"IX E",status:"LULUS"},{nisn:"0119745316",nama:"CICIN NATHANIA QURROTA A'YUN",kelas:"IX E",status:"LULUS"},{nisn:"0112088846",nama:"DION ARDIANSYAH",kelas:"IX E",status:"LULUS"},{nisn:"0108122644",nama:"DUWI KUSUMA RAHMAWATI",kelas:"IX E",status:"LULUS"},{nisn:"0109571869",nama:"FIBI ANASTASYA PUTRI",kelas:"IX E",status:"LULUS"},{nisn:"0119333134",nama:"GALANG MAULANA",kelas:"IX E",status:"LULUS"},{nisn:"0107768288",nama:"GRISELDA ARABELA SUMAIN",kelas:"IX E",status:"LULUS"},{nisn:"0112862114",nama:"ILHAM TRI ARDIANSYAH",kelas:"IX E",status:"LULUS"},{nisn:"0105489219",nama:"KAIRA YANI KURNIA RAMADHANI",kelas:"IX E",status:"LULUS"},{nisn:"0108176033",nama:"LARAS DEWI JUNIAR",kelas:"IX E",status:"LULUS"},{nisn:"0105981352",nama:"MOH. FAZZIL FITROH EVANTO",kelas:"IX E",status:"LULUS"},{nisn:"0117402583",nama:"MUHAMMAD ANANDA ZAINUL ARIFIN",kelas:"IX E",status:"LULUS"},{nisn:3103219952,nama:"MUHAMMAD DZUHA FAHMI",kelas:"IX E",status:"LULUS"},{nisn:"0103507637",nama:"MUKHAMMAD FEBRIYANTO MAULANA",kelas:"IX E",status:"LULUS"},{nisn:"0111077525",nama:"NADILLA FAJAR ANANTASYA",kelas:"IX E",status:"LULUS"},{nisn:"0101231318",nama:"NIA INDAH AYUNINGTYAS",kelas:"IX E",status:"LULUS"},{nisn:"0107345154",nama:"OKE BIMA SASTRA HANDIKA",kelas:"IX E",status:"LULUS"},{nisn:"0101505609",nama:"PUTRI NIKE ANGELINA",kelas:"IX E",status:"LULUS"},{nisn:"0109337190",nama:"RAKA ANDIKA MAULANA PASHA",kelas:"IX E",status:"LULUS"},{nisn:"0117736566",nama:"RIFKI ARKANA PUTRA BUNTARAM",kelas:"IX E",status:"LULUS"},{nisn:"0111521829",nama:"SHAQUILA DIAMOND KILBY",kelas:"IX E",status:"LULUS"},{nisn:"0103183414",nama:"SITI OKTAVIYA KHUSNUL KHOTIMAH",kelas:"IX E",status:"LULUS"},{nisn:"0098133406",nama:"VINO ALDEF MAREZEL",kelas:"IX E",status:"LULUS"},{nisn:"0103099787",nama:"VIRLI WINDRA AZILDAN",kelas:"IX E",status:"LULUS"},{nisn:"0119822084",nama:"ADITYA PRABU WIJAYA",kelas:"IX F",status:"LULUS"},{nisn:"0106124610",nama:"AIRA SYIFA NABILA",kelas:"IX F",status:"LULUS"},{nisn:3108025284,nama:"ALLANBIYA FAZACKY",kelas:"IX F",status:"LULUS"},{nisn:"0109222869",nama:"AMNA SALSABILA",kelas:"IX F",status:"LULUS"},{nisn:"0109946590",nama:"ARETHA PUTRI FERLIYANA",kelas:"IX F",status:"LULUS"},{nisn:"0113333771",nama:"ARKEANU RUIZ ALVIN ADRYAN",kelas:"IX F",status:"LULUS"},{nisn:"0104398877",nama:"AUREL CAHAYA MAULIDHA",kelas:"IX F",status:"LULUS"},{nisn:"0109806691",nama:"CAMELIA NESYA PUTRI WULANDARI",kelas:"IX F",status:"LULUS"},{nisn:"0102853332",nama:"DENIS ARGO SAPUTRA",kelas:"IX F",status:"LULUS"},{nisn:"0106271699",nama:"DWI AINUN ZHARIYAH",kelas:"IX F",status:"LULUS"},{nisn:"0118348560",nama:"FADLAN ARIF HIDAYAT",kelas:"IX F",status:"LULUS"},{nisn:"0109332589",nama:"FANESA DWI RAHMADANI",kelas:"IX F",status:"LULUS"},{nisn:"0116119946",nama:"FRISKA VANESYA",kelas:"IX F",status:"LULUS"},{nisn:"0101263911",nama:"HAFIZUDDIN MAHDI",kelas:"IX F",status:"LULUS"},{nisn:"0119923051",nama:"JESSICA JAUHARA QILMA BUDIARTI",kelas:"IX F",status:"LULUS"},{nisn:"0113473547",nama:"KHAMLATUR ROHMAH",kelas:"IX F",status:"LULUS"},{nisn:"0103009484",nama:"MOCHAMMAD ARGHA YUDHISTIRA RIMADA",kelas:"IX F",status:"LULUS"},{nisn:"0107954781",nama:"MUCHAMMAD GABRIELLE ABIE FARTAMA",kelas:"IX F",status:"LULUS"},{nisn:"0114156504",nama:"MUHAMMAD AZAM ZAKARIA",kelas:"IX F",status:"LULUS"},{nisn:"0102174211",nama:"MUHAMMAD NAZRIL ILHAM",kelas:"IX F",status:"LULUS"},{nisn:"0104751031",nama:"MUTIARA AIZZA ROFI ASAHRANI",kelas:"IX F",status:"LULUS"},{nisn:"0103460231",nama:"NATASYA PUTRI ZUHROTUL NISA",kelas:"IX F",status:"LULUS"},{nisn:"0104700648",nama:"NIKO AGUS HIDAYATULLOH",kelas:"IX F",status:"LULUS"},{nisn:"0101570311",nama:"OKTA KUSUMA PUTRI",kelas:"IX F",status:"LULUS"},{nisn:"0105574816",nama:"RENDRA ADITYA RAMADHAN",kelas:"IX F",status:"LULUS"},{nisn:"0102751390",nama:"RENITA SANDRA AGUSTINA",kelas:"IX F",status:"LULUS"},{nisn:"0114331100",nama:"SABBIKHISMA AS ZAHRA SURYONO",kelas:"IX F",status:"LULUS"},{nisn:"0106068709",nama:"SYAHRIL FADIL MUHAMMAD",kelas:"IX F",status:"LULUS"},{nisn:"0113270657",nama:"SYIFA MAULIDA APRILLIA PUTRI",kelas:"IX F",status:"LULUS"},{nisn:"0108652341",nama:"VANESYA BEIBY CHALISTA",kelas:"IX F",status:"LULUS"},{nisn:"0104364930",nama:"ZAHWA AULIA FARAH NAJLA OKTAVIONA",kelas:"IX F",status:"LULUS"},{nisn:"0117142031",nama:"ZULFA MAULIDA AZAHRO",kelas:"IX F",status:"LULUS"},{nisn:"0101353571",nama:"ADAM VISHNU RIZKY INDRA PRATAMA",kelas:"IX G",status:"LULUS"},{nisn:"0108186541",nama:"AGHNIA RISKY AZIZAH",kelas:"IX G",status:"LULUS"},{nisn:3107387631,nama:"AKHMAD ARYA ANDIKA NOVALDI",kelas:"IX G",status:"LULUS"},{nisn:3108005340,nama:"ALVI FILIA AZA PUTRI",kelas:"IX G",status:"LULUS"},{nisn:"0104620411",nama:"ANDI PRASETIYO",kelas:"IX G",status:"LULUS"},{nisn:"0111023628",nama:"ANNISA' NURUL LATHIFAH",kelas:"IX G",status:"LULUS"},{nisn:"0111729985",nama:"AULIA MEISHA RIVANI",kelas:"IX G",status:"LULUS"},{nisn:"0103161047",nama:"BUNGA FERONIKA",kelas:"IX G",status:"LULUS"},{nisn:"0103123397",nama:"CHIKO HAFIZ QODRU VEMBY SAPUTRA",kelas:"IX G",status:"LULUS"},{nisn:3102288053,nama:"DESY NURUL MAQFIROH",kelas:"IX G",status:"LULUS"},{nisn:"0107706226",nama:"EGA ABDUL FATAH",kelas:"IX G",status:"LULUS"},{nisn:"0107168443",nama:"ELIFIA AGUSTINA RAMADHANI",kelas:"IX G",status:"LULUS"},{nisn:"0104040062",nama:"FITRI SURA NANDA ",kelas:"IX G",status:"LULUS"},{nisn:"0108111001",nama:"GILANG RAMADHAN",kelas:"IX G",status:"LULUS"},{nisn:"0106777260",nama:"INDI SABRINA SALSABILA",kelas:"IX G",status:"LULUS"},{nisn:"0105439380",nama:"KAYLA NUR MUSTAFANI",kelas:"IX G",status:"LULUS"},{nisn:"0112136293",nama:"MARCELINO FIRMANSYAH",kelas:"IX G",status:"LULUS"},{nisn:"0104926672",nama:"MARWA DWI HIDAYATUL AMALIA",kelas:"IX G",status:"LULUS"},{nisn:"0111822818",nama:"MOHAMMAD ARGA MAULANA",kelas:"IX G",status:"LULUS"},{nisn:"0106974933",nama:"MOHAMMAD NIKO FERDIANSYAH",kelas:"IX G",status:"LULUS"},{nisn:"0114912877",nama:"MUHAMMAD HAIKAL ARYA PUTRA",kelas:"IX G",status:"LULUS"},{nisn:"0103142815",nama:"MUHAMMAD YUDA GUNAWAN",kelas:"IX G",status:"LULUS"},{nisn:"0102546080",nama:"NAFISYATUL ILMI KURNIA",kelas:"IX G",status:"LULUS"},{nisn:"0102251970",nama:"RANGGA OKTAVIAN RIZKY PUTRA",kelas:"IX G",status:"LULUS"},{nisn:"0111528878",nama:"RATU FELICIA VALENSI",kelas:"IX G",status:"LULUS"},{nisn:"0101729785",nama:"SUCI NUR ADINDA",kelas:"IX G",status:"LULUS"},{nisn:"0103979611",nama:"SULTAN ALIF FATHUROHMAN",kelas:"IX G",status:"LULUS"},{nisn:"0118249701",nama:"TSANIA XAVINA SUKMONO",kelas:"IX G",status:"LULUS"},{nisn:"0102791126",nama:"WAHANDIKA YUDHA SAPUTRA",kelas:"IX G",status:"LULUS"},{nisn:"0102456479",nama:"WAHYU NUR ZAAHIRAH",kelas:"IX G",status:"LULUS"}];
+
+
+    const audioPetasan = new Audio('https://www.myinstants.com/media/sounds/fireworks.mp3');
+    function cekKelulusan() {
+        const input = document.getElementById("nisn").value;
+        const hasilDiv = document.getElementById("hasil");
+        const siswa = dataSiswa.find(s => String(s.nisn) === input);
+
+        hasilDiv.style.display = "block";
+
+        if (siswa && siswa.status === "LULUS") {
+            // Efek perayaan 3 kali ledakan
+            let count = 0;
+            let interval = setInterval(function() {
+                // Animasi Confetti
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                // Memainkan suara
+                audioPetasan.currentTime = 0;
+                audioPetasan.play().catch(error => {
+                    console.log("Browser memblokir audio sampai ada interaksi user");
+                });
+
+                count++;
+                if (count === 3) clearInterval(interval);
+            }, 600); // Jeda 600ms antar ledakan agar suara tidak saling tumpuk
+
+            hasilDiv.style.background = "#d4edda";
+            hasilDiv.style.color = "#155724";
+            hasilDiv.innerHTML = `
+            <h3 style="margin:0;">SELAMAT! ЁЯОЙ</h3>
+            <p>Ananda <strong>${siswa.nama}</strong><br>Kelas <strong>${siswa.kelas}</strong></p>
+            <p style="font-size: 1.2em; font-weight: bold;">DINYATAKAN LULUS</p>
+            <p style="font-size: 0.9em;">Tahun Pelajaran 2025/2026</p>
+        `;
+        } else if (siswa) {
+            hasilDiv.style.background = "#f8d7da";
+            hasilDiv.style.color = "#721c24";
+            hasilDiv.innerHTML = `<p>Maaf <strong>${siswa.nama}</strong>, silakan hubungi pihak sekolah untuk informasi lebih lanjut.</p>`;
+        } else {
+            hasilDiv.style.background = "#fff3cd";
+            hasilDiv.style.color = "#856404";
+            hasilDiv.innerHTML = "Maaf, NISN tidak ditemukan. тЪая╕П";
+        }
+    }
+</script>
+
+</body>
+</html>
